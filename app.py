@@ -15,7 +15,6 @@ if username != USERNAME or password != PASSWORD:
     st.warning("Please login to access the system")
     st.stop()
 
-#Page Configuration
 st.set_page_config(
     page_title="Student Performance Prediction System",
     page_icon="🎓",
@@ -33,10 +32,9 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-#Load trained model
+
 model = joblib.load("Model/model.pkl")
 
-#Sidebar
 st.sidebar.title("📌Project Information")
 
 st.sidebar.info(
@@ -73,10 +71,8 @@ internet_usage = st.number_input("🌐Internet Usage Hours", min_value = 0)
 previous_marks = st.number_input("📊Previous Marks Percentage", min_value = 0)
 gender = st.selectbox("👤Gender", ["Male", "Female"])
 
-#Convert gender into number
 gender_value = 1 if gender == "Female" else 0
 
-#Prediction Button
 if st.button("🔍Predict Performance"):
     input_data = np.array([[
         study_hours,
@@ -91,35 +87,34 @@ if st.button("🔍Predict Performance"):
 
     st.write("---")
 
-    #Output Result
     if prediction[0] == 1:
         st.success("✅Excellent Student Performance")
     elif prediction[0] == 0:
         st.warning("⚠Average Student Performance")
     else:
         st.error("❌Poor Student Performance")
-st.write("---")
 
-st.subheader("AI Performance Insights")
+    st.write("---")
 
-if attendance < 50:
-    st.warning("🧠Low attendance may affect academic performance.")
-if study_hours < 3:
-    st.warning("📚Student should increase study hours.")
-if internet_usage > 8:
-    st.warning("🌐High Internet usage detected.")
-if sleep_hours < 5:
-    st.warning("😴Poor sleep schedule may reduce concentration.")
-if previous_marks > 80:
-    st.success("🏆Strong academic history detected")
-if assignment_completion > 80:
-    st.success("✅Assignment completion rate is excellent.")
+    st.subheader("AI Performance Insights")
+
+    if attendance < 50:
+        st.warning("🧠Low attendance may affect academic performance.")
+    if study_hours < 3:
+        st.warning("📚Student should increase study hours.")
+    if internet_usage > 8:
+        st.warning("🌐High Internet usage detected.")
+    if sleep_hours < 5:
+        st.warning("😴Poor sleep schedule may reduce concentration.")
+    if previous_marks > 80:
+        st.success("🏆Strong academic history detected")
+    if assignment_completion > 80:
+        st.success("✅Assignment completion rate is excellent.")
 
 st.write("---")
 
 st.subheader("📥 Download Prediction Report")
 
-# Create Report Data
 report_data = pd.DataFrame({
     "Field": [
         "Study Hours",
@@ -141,10 +136,8 @@ report_data = pd.DataFrame({
     ]
 })
 
-# Convert to CSV
 csv = report_data.to_csv(index=False).encode('utf-8')
 
-# Download Button
 st.download_button(
     label="📄 Download Report",
     data=csv,
@@ -165,17 +158,14 @@ with col2:
 with col3:
     st.metric(label="🎯Attendance",value=f"{attendance}%")
 
-#Sample Data for Charts
 chart_data = pd.DataFrame({
     "Category" : ["Study Hours","Attendance", "Sleep Hours", "Assignments"],
     "Values" : [ study_hours, attendance, sleep_hours, assignment_completion]
 })
 
-#Bar Chart
 st.write("### Student Activity Chart")
 st.bar_chart(chart_data.set_index("Category"))
 
-#Pie Chart
 performance_data = pd.DataFrame({
     "Performance": ["Good", "Average", "Poor"],
     "Count" : [60,25,15] 
